@@ -57,11 +57,13 @@ class Program
     {
         var buffer = new byte[4096];
         int bytesRead;
+        var encoding = Encoding.UTF8;
 
         while ((bytesRead = stream.Read(buffer, 0, buffer.Length)) > 0)
         {
-            var chunk = Encoding.Default.GetString(buffer, 0, bytesRead);
+            var chunk = encoding.GetString(buffer.AsSpan(0, bytesRead));
             process(chunk);
+            //_stdout.Write(Encoding.UTF8.GetString(buffer.AsSpan(0, bytesRead)));
         }
     }
 }
