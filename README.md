@@ -14,3 +14,8 @@ Input is read in chunks to better handle very large files.
 
 .Net console is used to not have to deal with tty's or identify the
 host OS to determine where to read STDIN.
+
+### touch
+
+Behavior
+- The same time is used in given invocation
