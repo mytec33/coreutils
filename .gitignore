@@ -14,8 +14,8 @@
 *.sln.docstates
 
 # touch
-/touch/go/gtouch
-/touch/go/example*.txt
+touch/go/gtouch
+touch/go/example*.txt
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
