@@ -19,3 +19,4 @@ host OS to determine where to read STDIN.
 
 Behavior
 - The same time is used in given invocation
+- Does NOT update the ctime (change time) with the same invocation date due to limits in Go library
