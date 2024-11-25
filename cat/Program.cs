@@ -14,7 +14,7 @@ class Program
         }
         else
         {
-            var files = GetFiles(args);
+            string[] files = GetFiles(args);
             bool isConsole = Console.IsOutputRedirected == false;
 
             foreach (string file in files)
@@ -22,7 +22,7 @@ class Program
                 try
                 {
                     using var stream = File.OpenRead(file);
-                    Cat(stream);               
+                    CatFiles(stream);
                 }
                 catch (FileNotFoundException)
                 {
@@ -53,9 +53,33 @@ class Program
         ProcessStream(stream, s => _stdout.Write(s));
     }
 
+    private static void CatFiles(Stream stream)
+    {
+        var buffer = new byte[4];
+        int bytesRead;
+        var stdout = Console.OpenStandardOutput();
+
+        while ((bytesRead = stream.Read(buffer, 0, buffer.Length)) > 0)
+        {
+            var lineStartIndex = 0;
+
+            for (int i = 0; i < buffer.Length; i++ )
+            {
+                if (buffer[i] == 0x00 || i > bytesRead)
+                    continue;
+
+                if (buffer[i] == 0xa)
+                {
+                    stdout.Write(buffer, lineStartIndex, (i - lineStartIndex) + 1);
+                    lineStartIndex = i + 1;
+                }
+            }
+        }
+    }
+
     private static void ProcessStream(Stream stream, Action<string> process)
     {
-        var buffer = new byte[4096];
+        var buffer = new byte[64*1024];
         int bytesRead;
         var encoding = Encoding.UTF8;
 
@@ -63,7 +87,6 @@ class Program
         {
             var chunk = encoding.GetString(buffer.AsSpan(0, bytesRead));
             process(chunk);
-            //_stdout.Write(Encoding.UTF8.GetString(buffer.AsSpan(0, bytesRead)));
         }
     }
 }
